@@ -72,8 +72,6 @@ You'll leave understanding what atproto actually *is*, and with a realistic path
 
 One source of truth (your files), one network you own (the protocol), many lenses to read it (the apps).
 
-### ASCII
-
 ```text
         FILE  ───▶  PROTOCOL  ───▶  APP
        (own it)    (share it)      (read it — many lenses, one source)
@@ -96,69 +94,26 @@ One source of truth (your files), one network you own (the protocol), many lense
    └───────────────┬──────────────┘
                    │  com.atproto.repo.createRecord
                    ▼
-   ┌────────────────────────────────────────────────┐
+   ┌──────────────────────────────────────────────────┐
    │ PROTOCOL — your PDS   (records you own)          │
-   │ identity: did:plc:… + handle   (via plc.directory)│
+   │ identity: did:plc:… + handle  (plc.directory)    │
    │ addressed by DID + rkey:                         │
-   │   site.standard.document   shared → reach/interop│
-   │   space.remanso.note       custom → rich render  │
-   └────────┬──────────────────────────────┬──────────┘
-            │ firehose / Jetstream         │ listRecords (read)
-            ▼                              ▼
-   ┌─────────────────────────┐   ┌───────────────────────────────┐
-   │ remanso-jetstream       │   │ APP — many lenses, one source │
+   │   site.standard.document   shared → reach        │
+   │   space.remanso.note       custom → rich         │
+   └────────────┬─────────────────────────────────┬───┘
+                │ firehose / Jetstream            │ listRecords (read)
+                ▼                                 ▼
+   ┌─────────────────────────┐   ┌────────────────────────────────┐
+   │ remanso-jetstream       │   │ APP — many lenses, one source  │
    │ AppView (self-hosted)   │   │  Remanso (remanso.space)       │
    │ Jetstream→SQLite→REST   │──▶│    + Bluesky graph (getFollows)│
-   └─────────────────────────┘   │  apoena.dev (static · îles)    │
+   └─────────────────────────┘   │  apoena.dev (static site)      │
                                  │  Leaflet / any standard.site   │
      reuse the Bluesky graph ───▶│  Bluesky & other atproto apps  │
-     app.bsky.graph.getFollows   └───────────────────────────────┘
+     app.bsky.graph.getFollows   └────────────────────────────────┘
 
    Self-hosted on Coolify (platform.apoena.dev) + Gitea (git.apoena.dev).
    GitHub = push mirror.
-```
-
-### Mermaid
-
-```mermaid
-flowchart TD
-    subgraph FILE["📄 FILE — own it"]
-        IDE["Markdown notes in your IDE<br/>Zettelkasten: notes + backlinks<br/>~800 notes, private Git repo"]
-        PUB["note.pub.md<br/>suffix + commit = publish"]
-        IDE --> PUB
-    end
-
-    CLI["remanso-cli — fork of Sequoia<br/>local CLI or GitHub Action<br/>change-detect · images→blobs · atUri write-back"]
-
-    subgraph PROTO["🌐 PROTOCOL — share it · atproto"]
-        PDS["Your PDS — records you own<br/>identity: did:plc:… + handle"]
-        L1["site.standard.document<br/>shared → reach / interop"]
-        L2["space.remanso.note<br/>custom → rich rendering"]
-        PDS --- L1
-        PDS --- L2
-    end
-
-    JET["remanso-jetstream<br/>AppView (self-hosted)<br/>Jetstream → SQLite → REST"]
-
-    subgraph APP["🪟 APP — read it · many lenses, one source"]
-        REM["Remanso — remanso.space<br/>+ Bluesky graph (getFollows)"]
-        APO["apoena.dev — static site (îles)"]
-        LEAF["Leaflet / any standard.site reader"]
-        BSKY["Bluesky & other atproto apps"]
-    end
-
-    PLC["plc.directory<br/>resolve DID → PDS"]
-    GRAPH["app.bsky.graph.getFollows"]
-
-    PUB -->|git push| CLI
-    CLI -->|com.atproto.repo.createRecord| PDS
-    PLC -.resolve.-> PDS
-    PDS -->|firehose / Jetstream| JET
-    JET -->|REST| REM
-    PDS -->|listRecords at build time| APO
-    L1 -.read.-> LEAF
-    PDS -.public on the network.-> BSKY
-    GRAPH -.reuse the Bluesky graph.-> REM
 ```
 
 > The whole stack is self-hosted: **Coolify** (`platform.apoena.dev`) runs the AppView and apps, **Gitea** (`git.apoena.dev`) hosts the code, with **GitHub** as a push mirror.
