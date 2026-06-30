@@ -7,12 +7,7 @@
     "Lilex",
     "Source Code Pro"
   ],
-  "fontSize": "15pt",
-  "pageWidth": "500px",
-  "backlink": false,
-  "atmosphere": {
-    "contentDir": ".",
-    "publicationUri": "at://did:plc:4m3kouplb7s7xozjd3whinvl/site.standard.publication/3mdteq7ldoc2i",
-    "pdsUrl": "https://eurosky.social"
-  }
+  "fontSize": "13pt",
+  "pageWidth": "880px",
+  "backlink": false
 }
